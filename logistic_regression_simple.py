@@ -5,8 +5,6 @@ import h5py
 import scipy
 from PIL import Image
 from scipy import ndimage
-from lr_utils import load_dataset
-from public_tests import *
 
 %matplotlib inline
 %load_ext autoreload
@@ -21,16 +19,16 @@ test_set_x_flatten = test_set_x_orig.reshape(test_set_x_orig.shape[0],-1).T
 train_set_x = train_set_x_flatten / 255.
 test_set_x = test_set_x_flatten / 255.
 
-def sigmoid(z):   
+def sig(z):   
     s = 1 / (1 + np.exp(-z))  
     return s
 
-def initialize_with_zeros(dim):    
+def initialize(dim):    
     w = np.zeros((dim,1))
     b = 0.0    
     return w, b
 
-def propagate(w, b, X, Y):
+def prop(w, b, X, Y):
     m = X.shape[1]
     A = sigmoid(np.dot (w.T, X) + b)
     cost = -np.sum(Y * np.log(A) + (1 - Y) * np.log(1 - A)) / m
@@ -41,7 +39,7 @@ def propagate(w, b, X, Y):
              "db": db}    
     return grads, cost
 
-def optimize(w, b, X, Y, num_iterations=100, learning_rate=0.009, print_cost=False):
+def opt(w, b, X, Y, num_iterations=100, learning_rate=0.009, print_cost=False):
     w = copy.deepcopy(w)
     b = copy.deepcopy(b)
     
@@ -72,7 +70,7 @@ def optimize(w, b, X, Y, num_iterations=100, learning_rate=0.009, print_cost=Fal
     
     return params, grads, costs
 
-def model(X_train, Y_train, X_test, Y_test, num_iterations=2000, learning_rate=0.5, print_cost=False):
-    w,b = initialize_with_zeros(X_train.shape[0])
-    params, grads, costs = optimize(w,b,X_train,Y_train,num_iterations,learning_rate)
+def model_N(X_train, Y_train, X_test, Y_test, num_iterations=2000, learning_rate=0.5, print_cost=False):
+    w,b = initialize(X_train.shape[0])
+    params, grads, costs = opt(w,b,X_train,Y_train,num_iterations,learning_rate)
     return param, grads, costs
